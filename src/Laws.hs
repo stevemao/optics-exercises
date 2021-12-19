@@ -102,19 +102,28 @@ data Builder =
 instance Eq Builder where
     Builder a f == Builder b g = a == b && f a == g b
 
-build :: Lens' Builder String
-build = lens getBuilder setBuilder
+builder :: Lens' Builder String
+builder = lens getBuilder setBuilder
     where getBuilder (Builder c b) = b c
-          setBuilder (Builder c b) s = Builder c (const s)
+          setBuilder (Builder c b) s = Builder (lines s) b
 
 -- >>> f _ = "ret"
--- >>> view build (set build "test" (Builder [] f)) == "test"
--- True
+-- >>> view builder (set builder "test" (Builder [] f)) == "test"
+-- False
 
 -- >>> f _ = "ret"
--- >>> set build (view build (Builder [] f)) (Builder [] f) == Builder [] f
--- True
+-- >>> set builder (view builder (Builder [] f)) (Builder [] f) == Builder [] f
+-- False
 
 -- >>> f _ = "ret"
--- >>> set build "new value" (set build "old value" (Builder [] f)) == set build "new value" (Builder [] f)
+-- >>> set builder "new value" (set builder "old value" (Builder [] f)) == set builder "new value" (Builder [] f)
 -- True
+
+-- >>> let stringBuilder = Builder ["a", "b", "c"] concat
+-- >>> view builder stringBuilder
+-- "abc"
+-- >>> let newBuilder = set builder "abc" stringBuilder
+-- >>> view builder newBuilder
+-- "abc"
+-- >>> view builder newBuilder{_context=["d", "e", "f"]}
+-- "def"

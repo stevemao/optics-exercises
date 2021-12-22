@@ -102,18 +102,24 @@ data Builder =
 instance Eq Builder where
     Builder a f == Builder b g = a == b && f a == g b
 
+-- TODO: is this even correct?
 builder :: Lens' Builder String
-builder = lens getBuilder setBuilder
-    where getBuilder (Builder c b) = b c
-          setBuilder (Builder c b) s = Builder (lines s) b
+builder = lens getter setter
+  where
+    getter (Builder c f) = f c
+    setter (Builder c f) newVal =
+      Builder c $ \c' ->
+          if c' == c
+             then newVal
+             else f c
 
 -- >>> f _ = "ret"
 -- >>> view builder (set builder "test" (Builder [] f)) == "test"
--- False
+-- True
 
 -- >>> f _ = "ret"
 -- >>> set builder (view builder (Builder [] f)) (Builder [] f) == Builder [] f
--- False
+-- True
 
 -- >>> f _ = "ret"
 -- >>> set builder "new value" (set builder "old value" (Builder [] f)) == set builder "new value" (Builder [] f)
@@ -126,4 +132,4 @@ builder = lens getBuilder setBuilder
 -- >>> view builder newBuilder
 -- "abc"
 -- >>> view builder newBuilder{_context=["d", "e", "f"]}
--- "def"
+-- "abc"

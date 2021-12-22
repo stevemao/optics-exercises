@@ -27,6 +27,7 @@ library
   exposed-modules:
       Laws
       Lib
+      VirtualFields
   other-modules:
       Paths_optics_exercises
   hs-source-dirs:

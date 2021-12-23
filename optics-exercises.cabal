@@ -27,6 +27,7 @@ library
   exposed-modules:
       Laws
       Lib
+      SelfCorrecting
       VirtualFields
   other-modules:
       Paths_optics_exercises

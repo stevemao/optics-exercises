@@ -27,6 +27,7 @@ library
   exposed-modules:
       Laws
       Lib
+      Polymorphic
       SelfCorrecting
       VirtualFields
   other-modules:

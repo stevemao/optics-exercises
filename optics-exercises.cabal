@@ -28,6 +28,7 @@ library
       Composition
       Laws
       Lib
+      Operators
       Polymorphic
       SelfCorrecting
       VirtualFields

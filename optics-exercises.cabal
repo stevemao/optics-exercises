@@ -26,11 +26,13 @@ source-repository head
 library
   exposed-modules:
       Composition
+      CustomFolds
       Laws
       Lib
       Operators
       Polymorphic
       SelfCorrecting
+      SimpleFolds
       VirtualFields
   other-modules:
       Paths_optics_exercises

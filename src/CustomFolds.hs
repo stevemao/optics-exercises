@@ -5,6 +5,7 @@ import qualified Data.Text as T
 import qualified Data.Map as M
 import qualified Data.Set as S
 import Control.Lens
+import Data.Maybe
 
 newtype Name = Name
     { _getName :: String
@@ -63,16 +64,20 @@ makeLenses ''ShipCrew
 -- >>> [([1, 2], [3, 4]), ([5, 6], [7, 8])] ^.. folded . each . folded
 -- [1, 2, 3, 4, 5, 6, 7, 8]
 
--- >>> [1, 2, 3, 4] ^.. _
+-- >>> [1, 2, 3, 4] ^.. folded . to (\a -> if odd a then Left a else Right a)
 -- [Left 1, Right 2, Left 3, Right 4]
 
 -- >>> [(1, (2, 3)), (4, (5, 6))] ^.. each . folding (\(a, (b, c)) -> [a, b, c])
 -- [1,2,3,4,5,6]
 
--- >>> [(Just 1, Left "one"), (Nothing, Right 2)] ^.. _
+eitherToList :: Either e a -> [a]
+eitherToList (Right a) = [a]
+eitherToList (Left e) = []
+
+-- >>> [(Just 1, Left "one"), (Nothing, Right 2)] ^.. folded . folding (\(a, b) -> maybeToList a <> eitherToList b)
 -- [1, 2]
 
--- >>> [(1, "one"), (2, "two")] ^.. _
+-- >>> [(1, "one"), (2, "two")] ^.. folded . folding (\(a, b) -> [Left a, Right b])
 -- [Left 1, Right "one", Left 2, Right "two"]
 
 -- >>> S.fromList ["apricots", "apples"] ^.. folded . to reverse . folded
